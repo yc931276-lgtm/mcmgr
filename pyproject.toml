@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mcmgr"
+version = "0.6.0"
+description = "Download, install and run vanilla Minecraft (Java Edition) from the command line"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = []
+
+[project.scripts]
+mcmgr = "mcmgr.cli:main"
+
+[tool.setuptools]
+packages = ["mcmgr"]
+# Ship the build stamp (read by `mcmgr env`).
+[tool.setuptools.package-data]
+mcmgr = ["_build.json"]

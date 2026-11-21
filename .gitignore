@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+*.egg-info/
+dist/
+build/
+.venv-win/
+packaging/windows/version_info.txt

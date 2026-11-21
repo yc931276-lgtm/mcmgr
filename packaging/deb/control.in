@@ -1,0 +1,19 @@
+Package: mcmgr
+Version: @VERSION@
+Architecture: @ARCH@
+Maintainer: @MAINTAINER@
+Installed-Size: @INSTALLED_SIZE@
+Section: games
+Priority: optional
+Depends: python3 (>= 3.10)
+Recommends: default-jre-headless | default-jre
+Description: command-line manager for Java Edition Minecraft
+ mcmgr downloads, installs, launches and verifies vanilla Minecraft
+ (Java Edition) without a launcher GUI.  It keeps versions, libraries,
+ assets, natives and per-version launch settings under ~/.mcmgr
+ (override with MCMGR_HOME or --root), supports offline play with a
+ user name and optional UUID override, and can download through the
+ BMCLAPI mirror from mainland China.
+ .
+ A Java runtime (8 or newer, matching the game version) is required to
+ actually start the game, not to install files.

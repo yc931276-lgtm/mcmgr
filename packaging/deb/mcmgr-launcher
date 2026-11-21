@@ -1,0 +1,8 @@
+#!/bin/sh
+# Launcher installed at /usr/bin/mcmgr by the mcmgr Debian package.
+#
+# The Python package lives in /usr/lib/mcmgr.  Import it explicitly instead of
+# relying on PYTHONPATH: python would otherwise put the current directory first
+# and a stray ./mcmgr would shadow the installed package.
+set -e
+exec /usr/bin/python3 -B -c 'import sys; sys.path.insert(0, "/usr/lib/mcmgr"); from mcmgr.cli import main; sys.exit(main())' "$@"
