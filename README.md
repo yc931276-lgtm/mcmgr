@@ -6,8 +6,8 @@
 
 ## 安装
 
-Debian/Ubuntu 可以直接装 `.deb`（见下方「打包与发行」），Windows 可以下载/构建单文件
-`mcmgr.exe`。从源码运行时，任选其一（都不需要第三方依赖）：
+Debian/Ubuntu（含 ARM64/ARMHF）可以直接装 `.deb`（见下方「打包与发行」），Windows（x64
+与 ARM64）可以下载/构建单文件 `mcmgr.exe`。从源码运行时，任选其一（都不需要第三方依赖）：
 
 ```bash
 cd mcmgr
@@ -19,16 +19,26 @@ python3 -m pip install --user .   # 有 pip 的话可以装成命令（需要 se
 ## 打包与发行
 
 ```bash
-./packaging/deb/build-deb.sh                  # -> dist/mcmgr_<版本>_all.deb
-powershell -File packaging\windows\build.ps1 # Windows 上 -> dist\mcmgr.exe
+./packaging/deb/build-deb.sh                  # -> dist/mcmgr_<版本>_all.deb（任意架构）
+ARCH=arm64 ./packaging/deb/build-deb.sh       # -> dist/mcmgr_<版本>_arm64.deb
+ARCH=armhf ./packaging/deb/build-deb.sh       # -> dist/mcmgr_<版本>_armhf.deb
+./packaging/deb/build-all.sh                  # 一次构建 all + arm64 + armhf
+powershell -File packaging\windows\build.ps1  # Windows（x64 或 ARM64 本机）-> dist\mcmgr.exe
 ```
 
-- **Debian/Ubuntu**：`sudo apt install ./dist/mcmgr_0.5.0_all.deb`，安装后
-  `/usr/bin/mcmgr` 即可用（源码在 `/usr/lib/mcmgr`，不写 `__pycache__`，卸载无残留）。
+- **Debian/Ubuntu（x86_64 / ARM64 / ARMHF）**：`_all.deb` 在任意架构都能安装；
+  也可以用 `ARCH=arm64` / `ARCH=armhf` 生成只允许对应架构安装的包。包内是纯 Python
+  源码，不需要为目标架构编译。安装后 `/usr/bin/mcmgr` 即可用（源码在
+  `/usr/lib/mcmgr`，不写 `__pycache__`，卸载无残留）。
   依赖 `python3 (>= 3.10)`，Java 只是启动游戏时才需要。
-- **Windows 10/11**：`build.ps1` 用 PyInstaller 打包成自带 Python 运行时的单文件
-  `mcmgr.exe`（目标机无需装 Python）；PyInstaller 不能交叉编译，需要在 Windows 上
-  构建，或推 tag 让 `.github/workflows/build-packages.yml` 在 CI 上生成。
+- **Windows 10/11（x64 / ARM64）**：`build.ps1` 用 PyInstaller 打包成自带 Python
+  运行时的单文件 `mcmgr.exe`（目标机无需装 Python）。在 ARM64 Windows 上运行时，
+  pip 会安装 `win_arm64` 版 PyInstaller，产出**原生 ARM64** exe；在 x64 上则是 x64。
+  PyInstaller 不能交叉编译，另一种架构需要在对应机器或 CI 上构建；x64 exe 在
+  Windows 11 ARM 上也可以通过系统模拟运行。
+- 推 tag 或手动触发 `.github/workflows/build-packages.yml`，CI 会按矩阵构建
+  `all` / `arm64` / `armhf` 的 deb 和 x64 / arm64 的 exe，其中 arm64 deb 会在
+  `ubuntu-24.04-arm` 上真实安装验证。
 - 细节（包布局、卸载、Wine 备用方案、CI 产物下载）见
   [`packaging/README.md`](packaging/README.md)。
 

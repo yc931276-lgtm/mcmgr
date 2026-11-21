@@ -22,7 +22,7 @@ import os
 from pathlib import Path
 
 LAUNCHER_NAME = "mcmgr"
-LAUNCHER_VERSION = "0.6.0"
+LAUNCHER_VERSION = "0.7.0"
 USER_AGENT = f"{LAUNCHER_NAME}/{LAUNCHER_VERSION}"
 
 VERSION_MANIFEST_URL = "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json"

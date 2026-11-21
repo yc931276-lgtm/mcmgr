@@ -22,6 +22,9 @@ python --version
 if ($LASTEXITCODE -ne 0) {
     throw "python not found on PATH; install Python 3.10+ from python.org first"
 }
+# PyInstaller installs a bootloader wheel for the interpreter's architecture:
+# win_amd64 on x64 Windows, win_arm64 on Windows on ARM.
+python -c "import platform, sys; print('python arch:', platform.machine(), '| executable:', sys.executable)"
 
 # Real build time shown by `mcmgr env`, and the exe's version resource.
 python tools\stamp_build.py

@@ -1,9 +1,15 @@
 #!/usr/bin/env bash
-# Build a Debian package for mcmgr (pure Python, Architecture: all).
+# Build a Debian package for mcmgr (pure Python).
 #
-#   ./packaging/deb/build-deb.sh              # -> dist/mcmgr_<version>_all.deb
-#   OUT=/tmp/deb ./packaging/deb/build-deb.sh # -> /tmp/deb/...
-#   SKIP_STAMP=1 ./packaging/deb/build-deb.sh # reuse the existing build stamp
+#   ./packaging/deb/build-deb.sh                 # -> dist/mcmgr_<version>_all.deb
+#   ARCH=arm64 ./packaging/deb/build-deb.sh      # -> dist/mcmgr_<version>_arm64.deb
+#   OUT=/tmp/deb ./packaging/deb/build-deb.sh    # -> /tmp/deb/...
+#   SKIP_STAMP=1 ./packaging/deb/build-deb.sh    # reuse the existing build stamp
+#
+# ARCH may be all (default), amd64, arm64 or armhf.  The package is pure
+# Python, so every architecture can be produced on any host; the field only
+# declares where dpkg is allowed to install it.  Use ARCH=all for a single
+# package that works on every architecture.
 #
 # The package installs:
 #   /usr/bin/mcmgr                      wrapper (python3 -m mcmgr)
@@ -15,6 +21,14 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 OUT="${OUT:-$ROOT/dist}"
 ARCH="${ARCH:-all}"
 MAINTAINER="${MAINTAINER:-heaway <heaway@localhost>}"
+
+case "$ARCH" in
+  all|amd64|arm64|armhf) ;;
+  *)
+    echo "build-deb: unsupported ARCH '$ARCH' (use all, amd64, arm64 or armhf)" >&2
+    exit 2
+    ;;
+esac
 
 version="$(cd "$ROOT" && python3 -c 'import mcmgr; print(mcmgr.__version__)')"
 package="mcmgr_${version}_${ARCH}.deb"
